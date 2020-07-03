@@ -10,6 +10,7 @@ body{
   font-size: 14px;
 
   background-image: url('../images/Background.png');
+  background-size: cover;
 }
 
 h1, h2{
