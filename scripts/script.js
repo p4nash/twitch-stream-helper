@@ -57,23 +57,33 @@ ComfyJS.onRaid=(user, viewers, extra) => {
 ComfyJS.onCheer=(user, message, bits, flags, extra) => {
     console.log(user+' cheered');
 
+    var content = "<span class='userEvent'>"+user+'</span> cheered '+bits+' bits.';
+
+    if(message != null)
+      content = content + ' They said: <span class="italic">"'+message+'"</span>.';
+
     AddEvent('https://img.icons8.com/ios-filled/50/42ff87/diamond--v1.png',
-    "<span class='userEvent'>"+user+'</span> cheered '+bits+' bits. They said: <span class="bold">"'+message+'"</span>.');
+    content);
 }
 
 ComfyJS.onSub=(user, message, subTierInfo, extra) => {
     console.log(user+' subbed. ', subTierInfo.planName);
 
-    AddEvent('https://img.icons8.com/material-sharp/24/42ff87/star.png',
-    "<span class='userEvent'>"+user+'</span> subbed with '+subTierInfo.planName+' sub. They said: <span class="italic">"'+message+'"</span>.');
+    var content = "<span class='userEvent'>"+user+'</span> subbed with '+subTierInfo.planName+' sub.';
+    if(message != null)
+      content = content + ' They said: <span class="italic">"'+message+'"</span>.'
+    AddEvent('https://img.icons8.com/material-sharp/24/42ff87/star.png',content);
 }
 
 ComfyJS.onResub=(user, message, streamMonths, cumulativeMonths, subTierInfo, extra) => {
-    console.log(user+' subbed. ', subTierInfo.planName);
+    console.log(user+' subbed. ', subTierInfo.planName, message);
 
-    AddEvent('https://img.icons8.com/material-sharp/24/ffd000/star.png',
-    "<span class='userEvent'>"+user+'</span> subbed with '+subTierInfo.planName+' sub. They\'ve been subbed for  <span class="bold">'+streamMonths+' months</span>.'+
-     +'They said: <span class="italic">"'+message+'"</span>.');
+    var content =  "<span class='userEvent'>"+user+'</span> subbed with '+subTierInfo.planName+' sub. They\'ve been subbed for  <span class="bold">'+streamMonths+' months</span>.';
+
+     if(message != null)
+      content = content + ' They said: <span class="italic">"' + message + '"</span>.'
+
+    AddEvent('https://img.icons8.com/material-sharp/24/ffd000/star.png', content);
 }
 
 ComfyJS.onSubGift=( gifterUser, streakMonths, recipientUser, senderCount, subTierInfo, extra ) => {
@@ -109,7 +119,7 @@ function AddEvent(image, content){
   content+"</div>";
 
   $('#eventsList').append(userElement);
-  $('#eventsList').animate({scrollTop: $('#eventsList')[0].scrollHeight}, 500);
+  $('#eventsList').animate({scrollTop: $('#eventsList')[0].scrollHeight}, 10);
 }
 
 function AddMessage(user, message, extra){
