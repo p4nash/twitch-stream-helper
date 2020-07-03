@@ -6,7 +6,7 @@ $(function(){
   channelNameString=localStorage.getItem("twitch");
 
   if(channelNameString == null)
-    window.location.href = "login.html";
+    window.location.href = "index.html";
 
 ComfyJS.onChat = ( user, command, message, flags, extra ) => {
   AddMessage(user, command, extra);
@@ -135,6 +135,7 @@ function AddMessage(user, message, extra){
 
 
 function isAddressedToSomeoneElse(content){
+  var ats = content.search('@');
   if(content.search('@') < 0)
     return false;
 
@@ -175,5 +176,5 @@ function findUsername(nameGiven, nameToFind){
 function logout(){
   localStorage.removeItem("twitch");
   // localStorage.setItem("twitch", channel);
-  window.location.href = "login.html";
+  window.location.href = "index.html";
 }
