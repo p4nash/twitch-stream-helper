@@ -78,7 +78,7 @@ ComfyJS.onSub=(user, message, subTierInfo, extra) => {
 ComfyJS.onResub=(user, message, streamMonths, cumulativeMonths, subTierInfo, extra) => {
     console.log(user+' subbed. ', subTierInfo.planName, message);
 
-    var content =  "<span class='userEvent'>"+user+'</span> subbed with '+subTierInfo.planName+' sub. They\'ve been subbed for  <span class="bold">'+streamMonths+' months</span>.';
+    var content =  "<span class='userEvent'>"+user+'</span> subbed with '+subTierInfo.planName+' sub. They\'ve been subbed for  <span class="bold">'+cumulativeMonths+' months</span>.';
 
      if(message != null)
       content = content + ' They said: <span class="italic">"' + message + '"</span>.'
