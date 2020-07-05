@@ -180,3 +180,11 @@ button:hover{
   right: 20px;
   padding: 20px;
 }
+.disclaimer>a{
+  color: #ff0055;
+}
+.disclaimer{
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
