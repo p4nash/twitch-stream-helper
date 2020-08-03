@@ -14,13 +14,13 @@ Here's a simple Twitch helper that separates your chat, events and viewers and d
 6. Profit.
 
 Note: It'll show you events for the following:
--Anything sub related. Subs, resubs, gifted subs and so on.
--When someone cheers, hosts or raids.
--When anyone leaves or enters chat.
--When anyone messages in chat.
+- Anything sub related. Subs, resubs, gifted subs and so on.
+- When someone cheers, hosts or raids.
+- When anyone leaves or enters chat.
+- When anyone messages in chat.
 
 You can scroll through chat and events.
 
 View count is reflective of who's in you chat. It's possible to have bots and hence, a greater view count. Therefore, the view count does not accurately show how many active viewers you have. 
 
-**This project runs on [ComfyJS](https://github.com/instafluff/ComfyJS)**
+**This project runs on [ComfyJS](https://github.com/instafluff/ComfyJS). Working code [here](https://p4nash.github.io/twitch-stream-helper/feed.html)**
