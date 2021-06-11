@@ -1,3 +1,5 @@
+
+
 html{
   font-family: 'Montserrat', sans-serif;
 }
@@ -8,9 +10,11 @@ body{
   color: white;
   font-weight:500;
   font-size: 14px;
+  overflow: hidden!important;
 
-  background-image: url('../images/Background.png');
+  background-image: url('https://wallpapercave.com/wp/wp4676582.jpg');
   background-size: cover;
+  background-repeat: no-repeat;
 }
 
 h1, h2{
@@ -25,14 +29,14 @@ h1, h3{
   text-align:center;
 }
 
-
 #eventsList, #messagesList{
   height: 75vh;
-  background-color: rgba(255, 255, 255, 0.1);
+  /* border: 2px solid white; */
+  background-color: rgba(40, 10, 60, 0.25);
   backdrop-filter: blur(5px);
   padding: 20px;
   border-radius: 10px;
-  overflow-y: scroll;
+  overflow-y: visible!important;
   overflow-x: hidden;
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
 }
@@ -73,10 +77,13 @@ h1, h3{
   border-radius: 10px;
 }
 .event{
-  background-color: rgba(40, 10, 60, 0.85);
+  /* background-color: rgba(40, 10, 60, 0.9); */
+  background-image: linear-gradient(to right, #280a3c, #071d4a);
   font-size: 1.2em;
   font-weight: 400;
   color: white;
+  backdrop-filter: blur(20px);
+  box-shadow: 0px 0px 20px rgba(40, 10, 60, 0.75);
 }
 
 .user{
@@ -118,11 +125,15 @@ h1, h3{
 }
 
 .normal{
-  background-color: rgba(40, 10, 60, 0.85);
+  /* background-color: rgba(40, 10, 60, 0.85); */
+  background-image: linear-gradient(to right, #280a3c, #071d4a);
 }
 
 .unhighlight{
-  background-color: rgba(40, 10, 60, 0.6);
+background-image: linear-gradient(to right, #280a3c, #071d4a);
+  opacity: 0.5;
+  backdrop-filter: blur(10px);
+
 }
 @keyframes pulse {
   0% {background-color: rgba(40, 10, 60, 0.85);}
@@ -135,7 +146,12 @@ h1, h3{
   position: absolute;
   top: 50%;
 }
-
+.loginPage{
+  width: 100vw;
+  height: 100vh;
+  backdrop-filter: blur(50px);
+  /* opacity: 0.5; */
+}
 .vertical-center {
   margin: 0;
   position: absolute;
@@ -143,7 +159,7 @@ h1, h3{
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
 }
-input{
+input.text{
     background-color: rgba(255,255,255, 0.3);
     border: none;
     padding: 10px;
@@ -155,6 +171,11 @@ input{
     font-size: 1.5em;
     letter-spacing: 2px;
     text-align: center;
+    backdrop-filter: blur(15px);
+}
+input.text::placeholder{
+  color: rgba(255,255,255,0.5);
+  font-style: italic;
 }
 button{
   border: 2px solid;
@@ -164,12 +185,14 @@ button{
   color: rgb(40,10,60);
   font-weight: 900;
 }
+
 #login{
   display: block;
   margin: 0 auto;
   margin-top: 20px;
   padding: 10px 50px;
 }
+
 button:hover{
   background-color: #db0735;
 }
@@ -180,9 +203,57 @@ button:hover{
   right: 20px;
   padding: 20px;
 }
+#settings{
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  padding: 20px;
+}
+
+button.close{
+  background-color: #ff0055;
+  position: absolute;
+  top: 20px;
+  right:20px;
+  padding: 5px;
+}
+
+#settingsPanel{
+  width: 50%;
+  height: 50%;
+  background-color: rgba(40, 10, 60, 0.5);
+  font-size: 1.2em;
+  font-weight: 400;
+  color: white;
+  backdrop-filter: blur(20px);
+  box-shadow: 0px 0px 10px rgba(40, 10, 60, 0.75);
+  border-radius: 10px;
+  text-align: center;
+  padding: 20px;
+  display: none;
+
+  position: absolute;
+  margin: auto;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#settingsPanel>div{
+  text-align: left;
+}
+
+input.checkbox{
+  width: 50px;
+  border: none;
+  outline: none!important;
+  background-color: rgba(40, 10, 60, 0.75);
+}
+
 .disclaimer>a{
   color: #ff0055;
 }
+
 .disclaimer{
   position: absolute;
   bottom: 10px;

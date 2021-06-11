@@ -1,115 +1,142 @@
 
 var usersInChat = [];
 var channelNameString = "";
+var chatterCounterOn = false;
+var chatterEventOn = false;
+var scrollEvents = scrollMessages = true;
 
 $(function(){
   channelNameString=localStorage.getItem("twitch");
 
+  chatterCounterOn = localStorage.getItem("chatterCounterOn");
+
+  if(chatterCounterOn == null) {
+    chatterCounterOn = true;
+    localStorage.setItem("chatterCounterOn", true);
+    $("#chatterCounterOn").prop("checked", true);
+  }else{
+    $("#chatterCounterOn").prop("checked", chatterCounterOn);
+    if(chatterCounterOn) $('#viewerCount').show();
+    else $('#viewerCount').hide();
+  }
+
+  chatterEventOn = localStorage.getItem("chatterEventOn");
+
+  if(chatterEventOn == null) {
+    chatterEventOn = true;
+    localStorage.setItem("chatterEventOn", true);
+    $("#chatterEventOn").prop("checked", true);
+  }else{
+    $("#chatterEventOn").prop("checked", chatterEventOn);
+  }
+
   if(channelNameString == null)
     window.location.href = "index.html";
 
-ComfyJS.onChat = ( user, command, message, flags, extra ) => {
-  AddMessage(user, command, extra);
-}
+  ComfyJS.onChat = ( user, command, message, flags, extra ) => {
+    AddMessage(user, command, extra);
+  }
 
-ComfyJS.onJoin=(user, self, extra) => {
-    console.log(user+' joined chat');
+  ComfyJS.onJoin=(user, self, extra) => {
+      console.log(user+' joined chat');
+      if(!chatterEventOn) return;
 
-    AddEvent('https://img.icons8.com/material/24/42ff87/chat--v1.png',
-    "<span class='userEvent'>"+user+'</span> just joined.');
+      AddEvent('https://img.icons8.com/material/24/42ff87/chat--v1.png',
+      "<span class='userEvent'>"+user+'</span> just joined.');
 
-    if(!usersInChat.find(findUsername, user)){
-      usersInChat.push(user);
-      $('#viewerCount').html('<img src="https://img.icons8.com/ios-glyphs/30/ffffff/visible.png"/>'+usersInChat.length);
-    }
-}
-
-ComfyJS.onPart=(user, self, extra) => {
-    console.log(user+' left chat');
-
-    AddEvent('https://img.icons8.com/material/24/ff6ba1/chat--v1.png',
-    "<span class='userEvent'>"+user+'</span> just left.');
-
-    if(usersInChat.find(findUsername, user))
-    {
-      var index = usersInChat.indexOf(user);
-      if(index > -1){
-        usersInChat.splice(index, 1);
+      if(!usersInChat.find(findUsername, user)){
+        usersInChat.push(user);
         $('#viewerCount').html('<img src="https://img.icons8.com/ios-glyphs/30/ffffff/visible.png"/>'+usersInChat.length);
       }
-    }
-}
+  }
 
-ComfyJS.onHosted=(user, viewers, autohost, extra) => {
-    console.log(user+' hosted');
+  ComfyJS.onPart=(user, self, extra) => {
+      console.log(user+' left chat');
+      if(!chatterEventOn) return;
 
-    AddEvent('https://img.icons8.com/android/24/ff6ba1/retro-tv.png',
-    "<span class='userEvent'>"+user+'</span> hosted with '+viewers+' viewers.');
-}
+      AddEvent('https://img.icons8.com/material/24/ff6ba1/chat--v1.png',
+      "<span class='userEvent'>"+user+'</span> just left.');
 
-ComfyJS.onRaid=(user, viewers, extra) => {
-    console.log(user+' raided');
+      if(usersInChat.find(findUsername, user))
+      {
+        var index = usersInChat.indexOf(user);
+        if(index > -1){
+          usersInChat.splice(index, 1);
+          $('#viewerCount').html('<img src="https://img.icons8.com/ios-glyphs/30/ffffff/visible.png"/>'+usersInChat.length);
+        }
+      }
+  }
 
-    AddEvent('https://img.icons8.com/ios-glyphs/30/ff6ba1/baby-footprints-path.png',
-    "<span class='userEvent'>"+user+'</span> raided with '+viewers+' viewers.');
-}
+  ComfyJS.onHosted=(user, viewers, autohost, extra) => {
+      console.log(user+' hosted');
 
-ComfyJS.onCheer=(user, message, bits, flags, extra) => {
-    console.log(user+' cheered');
+      AddEvent('https://img.icons8.com/android/24/ff6ba1/retro-tv.png',
+      "<span class='userEvent'>"+user+'</span> hosted with '+viewers+' viewers.');
+  }
 
-    var content = "<span class='userEvent'>"+user+'</span> cheered '+bits+' bits.';
+  ComfyJS.onRaid=(user, viewers, extra) => {
+      console.log(user+' raided');
 
-    if(message != null)
-      content = content + ' They said: <span class="italic">"'+message+'"</span>.';
+      AddEvent('https://img.icons8.com/ios-glyphs/30/ff6ba1/baby-footprints-path.png',
+      "<span class='userEvent'>"+user+'</span> raided with '+viewers+' viewers.');
+  }
 
-    AddEvent('https://img.icons8.com/ios-filled/50/42ff87/diamond--v1.png',
-    content);
-}
+  ComfyJS.onCheer=(user, message, bits, flags, extra) => {
+      console.log(user+' cheered');
 
-ComfyJS.onSub=(user, message, subTierInfo, extra) => {
-    console.log(user+' subbed. ', subTierInfo.planName);
+      var content = "<span class='userEvent'>"+user+'</span> cheered '+bits+' bits.';
 
-    var content = "<span class='userEvent'>"+user+'</span> subbed with '+subTierInfo.planName+' sub.';
-    if(message != null)
-      content = content + ' They said: <span class="italic">"'+message+'"</span>.'
-    AddEvent('https://img.icons8.com/material-sharp/24/42ff87/star.png',content);
-}
+      if(message != null)
+        content = content + ' They said: <span class="italic">"'+message+'"</span>.';
 
-ComfyJS.onResub=(user, message, streamMonths, cumulativeMonths, subTierInfo, extra) => {
-    console.log(user+' subbed. ', subTierInfo.planName, message);
+      AddEvent('https://img.icons8.com/ios-filled/50/42ff87/diamond--v1.png',
+      content);
+  }
 
-    var content =  "<span class='userEvent'>"+user+'</span> subbed with '+subTierInfo.planName+' sub. They\'ve been subbed for  <span class="bold">'+cumulativeMonths+' months</span>.';
+  ComfyJS.onSub=(user, message, subTierInfo, extra) => {
+      console.log(user+' subbed. ', subTierInfo.planName);
 
-     if(message != null)
-      content = content + ' They said: <span class="italic">"' + message + '"</span>.'
+      var content = "<span class='userEvent'>"+user+'</span> subbed with '+subTierInfo.planName+' sub.';
+      if(message != null)
+        content = content + ' They said: <span class="italic">"'+message+'"</span>.'
+      AddEvent('https://img.icons8.com/material-sharp/24/42ff87/star.png',content);
+  }
 
-    AddEvent('https://img.icons8.com/material-sharp/24/ffd000/star.png', content);
-}
+  ComfyJS.onResub=(user, message, streamMonths, cumulativeMonths, subTierInfo, extra) => {
+      console.log(user+' subbed. ', subTierInfo.planName, message);
 
-ComfyJS.onSubGift=( gifterUser, streakMonths, recipientUser, senderCount, subTierInfo, extra ) => {
-    console.log(user+' subbed. ', subTierInfo.planName);
+      var content =  "<span class='userEvent'>"+user+'</span> subbed with '+subTierInfo.planName+' sub. They\'ve been subbed for  <span class="bold">'+cumulativeMonths+' months</span>.';
 
-    AddEvent('https://img.icons8.com/metro/26/42ff87/gift.png',
-    "<span class='userEvent'>"+gifterUser+'</span> gifted a '+subTierInfo.planName+' sub to '+recipientUser+'. They\'ve gifted '+senderCount+' subs so far!');
-}
+       if(message != null)
+        content = content + ' They said: <span class="italic">"' + message + '"</span>.'
 
-ComfyJS.onGiftSubContinue=(user, sender, extra) => {
-    console.log(user+' resubbed');
+      AddEvent('https://img.icons8.com/material-sharp/24/ffd000/star.png', content);
+  }
 
-    AddEvent('https://img.icons8.com/metro/26/ffd000/gift.png',
-    "<span class='userEvent'>"+sender+'</span> continued '+user+'\'s sub for them!');
-}
+  ComfyJS.onSubGift=( gifterUser, streakMonths, recipientUser, senderCount, subTierInfo, extra ) => {
+      console.log(user+' subbed. ', subTierInfo.planName);
 
-ComfyJS.onSubMysteryGift=( gifterUser, numbOfSubs, senderCount, subTierInfo, extra ) => {
-    console.log(user+' subbed. ', subTierInfo.planName);
+      AddEvent('https://img.icons8.com/metro/26/42ff87/gift.png',
+      "<span class='userEvent'>"+gifterUser+'</span> gifted a '+subTierInfo.planName+' sub to '+recipientUser+'. They\'ve gifted '+senderCount+' subs so far!');
+  }
 
-    AddEvent('https://img.icons8.com/pastel-glyph/64/42ff87/christmas-gift--v2.png',
-    "<span class='userEvent'>"+gifterUser+'</span> gifted '+numbOfSubs+' '+subTierInfo.planName+' subs to the channel! They\'ve gifted '+senderCount+' to the channel.');
-}
+  ComfyJS.onGiftSubContinue=(user, sender, extra) => {
+      console.log(user+' resubbed');
 
-ComfyJS.Init( channelNameString );
+      AddEvent('https://img.icons8.com/metro/26/ffd000/gift.png',
+      "<span class='userEvent'>"+sender+'</span> continued '+user+'\'s sub for them!');
+  }
 
-$('#channelName').html(channelNameString);
+  ComfyJS.onSubMysteryGift=( gifterUser, numbOfSubs, senderCount, subTierInfo, extra ) => {
+      console.log(user+' subbed. ', subTierInfo.planName);
+
+      AddEvent('https://img.icons8.com/pastel-glyph/64/42ff87/christmas-gift--v2.png',
+      "<span class='userEvent'>"+gifterUser+'</span> gifted '+numbOfSubs+' '+subTierInfo.planName+' subs to the channel! They\'ve gifted '+senderCount+' to the channel.');
+  }
+
+  ComfyJS.Init( channelNameString );
+
+  $('#channelName').html(channelNameString);
 
 });
 
@@ -119,7 +146,9 @@ function AddEvent(image, content){
   content+"</div>";
 
   $('#eventsList').append(userElement);
-  $('#eventsList').animate({scrollTop: $('#eventsList')[0].scrollHeight}, 10);
+
+  if(scrollEvents)
+    $('#eventsList').animate({scrollTop: $('#eventsList')[0].scrollHeight}, 10);
 }
 
 function AddMessage(user, message, extra){
@@ -135,12 +164,13 @@ function AddMessage(user, message, extra){
   if(forYou) messageType = "highlight";
 
   var messageElement = "<div class='message "+messageType+"'>"+
-    "<span class='userName bold'>"+user+"</span>"+
+    "<span class='userName bold' style='color:"+extra.userColor+";'>"+user+"</span>"+
     "<span class='messageContent'>"+finalMsg+"</span>"
   +"</div>";
 
   $('#messagesList').append(messageElement);
-  $('#messagesList').animate({scrollTop: $('#messagesList')[0].scrollHeight}, 500);
+  if(scrollMessages)
+    $('#messagesList').animate({scrollTop: $('#messagesList')[0].scrollHeight}, 500);
 }
 
 
@@ -180,11 +210,44 @@ function formatEmotes(text, emotes) {
     }
     return splitText.join('');
 }
+
 function findUsername(nameGiven, nameToFind){
   return nameGiven == nameToFind;
 }
+
 function logout(){
   localStorage.removeItem("twitch");
   // localStorage.setItem("twitch", channel);
   window.location.href = "index.html";
+}
+
+function settings(){
+  $('#settingsPanel').fadeIn();
+}
+
+$('.close').click(function(){
+  $(this).parent().fadeOut();
+});
+
+$("input[type='checkbox']").click(function(){
+  localStorage.setItem($(this).attr("id"), $(this).is(':checked'));
+});
+
+$('#chatterCounterOn').click(function(){
+  chatterCounterOn = $(this).is(':checked');
+
+  if(chatterCounterOn) $('#viewerCount').show();
+  else $('#viewerCount').hide();
+});
+
+$('#chatterEventOn').click(function(){
+  chatterEventOn = $(this).is(':checked');
+});
+
+function scrollEvents(){
+  scrollEvents = false;
+}
+
+function scrollMessages(){
+  scrollMessages = false;
 }
