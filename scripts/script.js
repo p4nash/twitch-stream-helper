@@ -4,6 +4,7 @@ var channelNameString = "";
 var chatterCounterOn = false;
 var chatterEventOn = false;
 var scrollEvents = scrollMessages = true;
+var isAutoScrollEvent = false;
 
 $(function(){
   channelNameString=localStorage.getItem("twitch");
@@ -169,6 +170,7 @@ function AddMessage(user, message, extra){
   +"</div>";
 
   $('#messagesList').append(messageElement);
+
   if(scrollMessages)
     $('#messagesList').animate({scrollTop: $('#messagesList')[0].scrollHeight}, 500);
 }
@@ -217,7 +219,6 @@ function findUsername(nameGiven, nameToFind){
 
 function logout(){
   localStorage.removeItem("twitch");
-  // localStorage.setItem("twitch", channel);
   window.location.href = "index.html";
 }
 
@@ -244,10 +245,13 @@ $('#chatterEventOn').click(function(){
   chatterEventOn = $(this).is(':checked');
 });
 
-function scrollEvents(){
-  scrollEvents = false;
-}
+$("#messagesList").on('mousewheel', function(){
+    scrollMessages = false;
+    $("#resumeScroll").fadeIn();
+});
 
-function scrollMessages(){
-  scrollMessages = false;
-}
+$("#resumeScroll").click(function(){
+  scrollMessages = true;
+  $(this).fadeOut();
+  $('#messagesList').animate({scrollTop: $('#messagesList')[0].scrollHeight}, 500);
+});
